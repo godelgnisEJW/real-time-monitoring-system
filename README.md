@@ -195,9 +195,9 @@ cd ../../scripts
 
 + **访问本机ip地址的8081端口，通过webUI提交任务**
 
-![image1](images\image1.png)
+![image1](https://github.com/godelgnisEJW/real-time-monitoring-system/images/image1.png)
 
-![image2](images\image2.png)
+![image2](https://github.com/godelgnisEJW/real-time-monitoring-system/images/image2.png)
 
 + **jar包对应的主类**
 
