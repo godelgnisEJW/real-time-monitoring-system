@@ -1,0 +1,96 @@
+version: "3.1"
+
+services:
+  zookeeper:
+    image: bitnami/zookeeper
+    ports:
+     - 2181:2181
+    environment:
+     - ALLOW_ANONYMOUS_LOGIN=yes
+     - ZOO_HEAP_SIZE=256
+
+  kafka1:
+    image: bitnami/kafka
+    ports:
+      - 9092
+    depends_on:
+      - zookeeper
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_DELETE_TOPIC_ENABLE=true
+      - KAFKA_HEAP_OPTS=-Xmx256M -Xms128M
+          
+  kafka2:
+    image: bitnami/kafka
+    ports:
+      - 9092
+    depends_on:
+      - zookeeper
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_DELETE_TOPIC_ENABLE=true
+      - KAFKA_HEAP_OPTS=-Xmx256M -Xms128M
+          
+  kafka3:
+    image: bitnami/kafka
+    ports:
+      - 9092
+    depends_on:
+      - zookeeper
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_DELETE_TOPIC_ENABLE=true
+      - KAFKA_HEAP_OPTS=-Xmx256M -Xms128M
+
+  jm:
+    image: flink:1.9.2-scala_2.12
+    expose:
+      - 6123
+    ports:
+      - 8081:8081
+    command: jobmanager
+    volumes:
+      - /home/wje/real-time-monitoring-system/Linux/app/flink/job_conf/flink-conf.yaml:/opt/flink/conf/flink-conf.yaml
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jm
+          
+  tm:
+    image: flink:1.9.2-scala_2.12
+    expose:
+      - 6121
+      - 6122
+    depends_on:
+      - jm
+    command: taskmanager
+    links:
+      - jm:jm
+    volumes:
+      - /home/wje/real-time-monitoring-system/Linux/app/flink/task_conf/flink-conf.yaml:/opt/flink/conf/flink-conf.yaml
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jm
+          
+  redis-server:
+    image: redis
+    ports:
+      - 6379:6379
+          
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - /home/wje/real-time-monitoring-system/Linux/app/nginx/dist:/usr/share/nginx/html:ro
+          
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.6.0
+    volumes:
+      - /home/wje/real-time-monitoring-system/Linux/app/filebeat/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /home/wje/real-time-monitoring-system/Linux/logs/log-in-out.log:/var/log/log-in-out.log
+      - /home/wje/real-time-monitoring-system/Linux/logs/interface.log:/var/log/interface.log
+      - /home/wje/real-time-monitoring-system/Linux/logs/msg.log:/var/log/msg.log
+      - /home/wje/real-time-monitoring-system/Linux/logs/queue.log:/var/log/queue.log
+      - /home/wje/real-time-monitoring-system/Linux/logs/user.log:/var/log/user.log
+      - /home/wje/real-time-monitoring-system/Linux/logs/area.log:/var/log/area.log

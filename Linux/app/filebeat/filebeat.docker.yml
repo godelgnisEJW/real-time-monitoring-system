@@ -1,0 +1,48 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/log-in-out.log
+  fields:
+    log_topics: log-in-out-log
+- type: log
+  enabled: true
+  paths:
+    - /var/log/area.log
+  fields:
+    log_topics: areaLog
+- type: log
+  enabled: true
+  paths:
+    - /var/log/interface.log
+  fields:
+    log_topics: interfaceLog
+- type: log
+  enabled: true
+  paths:
+    - /var/log/msg.log
+  fields:
+    log_topics: msgLog
+- type: log
+  enabled: true
+  paths:
+    - /var/log/queue.log
+  fields:
+    log_topics: queueLog
+- type: log
+  enabled: true
+  paths:
+    - /var/log/user.log
+  fields:
+    log_topics: userLog
+output.kafka:
+  enabled: true
+  hosts: ["kafka1:9092","kafka2:9092","kafka3:9092"]
+  codec.format:
+    string: '%{[message]}'
+  topic: '%{[fields.log_topics]}'
+  partition.round_robin:
+    reachable_only: false
+
+  required_acks: 1
+  max_message_bytes: 1000
