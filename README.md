@@ -203,7 +203,7 @@ cd ../../scripts
 
 |                             包名                             |         主类名          |
 | :----------------------------------------------------------: | :---------------------: |
-|  **areaStatistics-1.0-SNAPSHOT-jar-with-dependencies.jar**   |   **areaStatistics**    |
+|  **areaStatistics-1.0-SNAPSHOT-jar-with-dependencies.jar**   |   **AreaStatistics**    |
 | **interfaceStatistics-1.0-SNAPSHOT-jar-with-dependencies.jar** | **InterfaceStatistics** |
 |   **msgStatistics-1.0-SNAPSHOT-jar-with-dependencies.jar**   |    **MsgStatistics**    |
 | **onlineNumStatistics-1.0-SNAPSHOT-jar-with-dependencies.jar** | **OnlineNumStatistics** |
