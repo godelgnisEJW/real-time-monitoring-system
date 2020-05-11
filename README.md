@@ -194,9 +194,9 @@ cd ../../scripts
 ### 提交**所有**任务
 
 + **访问本机ip地址的8081端口，通过webUI提交任务**
-  ![image1](images/image1.png)
+  ![image1](https://img-blog.csdnimg.cn/20200511123806850.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dvZGVsZ25pcw==,size_16,color_FFFFFF,t_70)
 
-  ![image2](images/image2.png)
+  ![image2](https://img-blog.csdnimg.cn/20200511123844382.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dvZGVsZ25pcw==,size_16,color_FFFFFF,t_70)
 
 
 + **jar包对应的主类**
