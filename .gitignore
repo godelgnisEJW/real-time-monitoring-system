@@ -31,6 +31,6 @@ build/
 .vscode/
 
 #自定义
-dist/*
-node_modules/*
+dist/**
+node_modules/**
 
