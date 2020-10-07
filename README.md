@@ -1,8 +1,10 @@
 # real-time-monitoring-system
 
-## 配置环境
+[toc]
 
-### 安装docker
+## 1. 配置环境
+
+### 1.1 安装docker
 
 参考链接 https://segmentfault.com/a/1190000018157675  ，配置阿里云镜像加速器
 
@@ -17,11 +19,11 @@ sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
 
-### 安装docker compose 
+### 1.2 安装docker compose 
 
 参考链接 http://get.daocloud.io/#install-compose
 
-### 安装Oracle JDK或者Open JDK 
+### 1.3 安装Oracle JDK或者Open JDK 
 
 以Centos7为例
 
@@ -30,7 +32,7 @@ rpm -qa | grep jdk
 yum install java-1.8.0-openjdk-devel.x86_64
 ```
 
-### 安装maven 
+### 1.4 安装maven 
 
 ***版本需大于3.3.9***，参考链接 https://www.cnblogs.com/qiyuan880794/p/9407342.html，配置阿里云镜像
 
@@ -67,7 +69,7 @@ vim settings.xml
  #保存退出
 ```
 
-### 安装node   
+### 1.5 安装node   
 
 + 可以直接从官网下载安装，或者参考链接https://blog.csdn.net/ziwoods/article/details/83751842，
 
@@ -77,9 +79,9 @@ vim settings.xml
 npm config set registry https://registry.npm.taobao.org –global
 ```
 
-## 项目准备
+## 2. 项目准备
 
-### 打包前端项目
+### 2.1 打包前端项目
 
 ```
 #进入到前端项目中
@@ -88,7 +90,7 @@ cd realtime-vue
 vim src/api/websocket.js
 #将文件第二行中let ws = new WebSocket("ws://192.168.50.146:8080/websocket");
 #ip地址更改为自己虚拟机的ip
-#按下ESC,:wq，保存退出
+#按下ESC，:wq，保存退出
 
 #在realtime-vue目录下
 #安装依赖
@@ -99,7 +101,7 @@ npm run build
 mv  dist  ../Linux/app/nginx/
 ```
 
-### 打包后端项目
+### 2.2 打包后端项目
 
 ```
 #进入到后端项目中
@@ -109,15 +111,13 @@ vim src/main/resources/application.properties
 #修改redis地址
 spring.redis.host=192.168.50.146 //根据自己的机器进行修改
 #保存退出
-#安装依赖
-mvn install
 #打包项目
 mvn package
 #将文件复制备用
 mv target/realtimebackend-0.0.1-SNAPSHOT.jar  ../Linux/app/springboot/
 ```
 
-### 打包Flink任务
+### 2.3 打包Flink任务
 
 ```
 #进入Flink任务项目
@@ -133,7 +133,7 @@ mv queueStatistics/target/queueStatistics-1.0-SNAPSHOT-jar-with-dependencies.jar
 mv userStatistics/target/userStatistics-1.0-SNAPSHOT-jar-with-dependencies.jar  ../Linux/app/tasks/
 ```
 
-### 下载镜像
+### 2.4 下载镜像
 
 ```
 docker pull nginx
@@ -144,7 +144,7 @@ docker pull flink:1.9.2-scala_2.12
 docker pull docker.elastic.co/beats/filebeat:7.6.0
 ```
 
-### 修改docker-compose.yml文件
+### 2.5 修改docker-compose.yml文件
 
 ```
 cd Linux/app
@@ -164,23 +164,23 @@ vim docker-compose.yml
 #改完之后保存退出
 ```
 
-## 启动项目
+## 3. 启动项目
 
-### 启动容器
+### 3.1 启动容器
 
 ```
 #在app目录下，执行
 docker-compose up -d
 ```
 
-### 启动后端
+### 3.2 启动后端
 
 ```
 cd springboot
 nohup java -jar realtimebackend-0.0.1-SNAPSHOT.jar & 
 ```
 
-### 创建kafka Topic
+### 3.3 创建kafka Topic
 
 ```
 cd ../../scripts
@@ -191,7 +191,7 @@ cd ../../scripts
 ./create-kafka-topics.sh
 ```
 
-### 提交**所有**任务
+### 3.4 提交**所有**任务
 
 + **访问本机ip地址的8081端口，通过webUI提交任务**
   ![image1](https://img-blog.csdnimg.cn/20200511123806850.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2dvZGVsZ25pcw==,size_16,color_FFFFFF,t_70)
@@ -210,7 +210,7 @@ cd ../../scripts
 |  **queueStatistics-1.0-SNAPSHOT-jar-with-dependencies.jar**  |   **QueueStatistics**   |
 |  **userStatistics-1.0-SNAPSHOT-jar-with-dependencies.jar**   |   **UserStatistics**    |
 
-### 启动数据生成脚本
+### 3.5 启动数据生成脚本
 
 ```
 #在scripts目录下,执行
@@ -226,9 +226,9 @@ cd ../../scripts
 ./stop-producer-by-name.sh area.sh
 ```
 
-### redis主题
+### 3.6 redis主题
 
-既是channe，也是key
+既是channel，也是key
 
 |              功能              |          主题兼KEY          |
 | :----------------------------: | :-------------------------: |
@@ -241,7 +241,7 @@ cd ../../scripts
 |          **文件数量**          |        **FILE:SIZE**        |
 | **用户来源及各端活跃用户占比** | **USER:SOURCES:PROPORTION** |
 
-### 外部访问kafka数据
+### 3.7 外部访问kafka数据
 
 需要修改docker-compose.yml文件，kafka对应的配置下，environment下添加相应的环境变量，以下可做参考，通过29092端口即可访问kafka
 
@@ -249,6 +249,6 @@ cd ../../scripts
 - ALLOW_PLAINTEXT_LISTENER=yes   
 - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT 
 - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,PLAINTEXT_HOST://:29092 
--KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://192.168.50.146:29092 
+-  KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://192.168.50.146:29092 
 ```
 
