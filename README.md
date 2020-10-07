@@ -1,6 +1,3 @@
-
-[toc]
-
 # real-time-monitoring-system
 ## 1. 配置环境
 
